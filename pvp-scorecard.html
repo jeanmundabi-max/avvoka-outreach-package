@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Automation Readiness Scorecard — Avvoka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--navy:#000a30;--navy-l:#10216b;--navy-m:#2e3c79;
+--coral:#fea293;--coral-h:#fd8a76;--coral-dim:rgba(254,162,147,.1);
+--cream:#f8f8f3;--off:#f7fafc;--lt:#f6f6f6;
+--dark:#212121;--dark-s:#3b3b33;
+--wh:#ffffff;--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;
+--red:#ef4444;--green:#22c55e;--amber:#f59e0b;
+--f:'Outfit',system-ui,sans-serif;
+}
+html{-webkit-font-smoothing:antialiased;font-size:18px}
+body{font-family:var(--f);color:var(--dark);line-height:1.6;background:var(--wh);min-height:100dvh;display:flex;flex-direction:column}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 20px;width:100%}
+
+/* Header */
+.hdr{background:var(--navy);padding:40px 0;text-align:center}
+.hdr .logo{font-weight:800;font-size:1rem;color:var(--wh);margin-bottom:14px}
+.hdr .logo span{color:var(--coral)}
+.hdr h1{font-size:clamp(1.4rem,3.5vw,1.9rem);font-weight:800;color:var(--wh);letter-spacing:-.03em;line-height:1.1;margin-bottom:8px}
+.hdr p{font-size:.88rem;color:var(--g4);max-width:460px;margin:0 auto}
+
+/* Progress */
+.progress-wrap{padding:20px 0;background:var(--wh);border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:10}
+.progress-bar{height:6px;background:#e5e7eb;border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--coral-h));border-radius:100px;transition:width .4s ease}
+.progress-text{display:flex;justify-content:space-between;margin-top:8px;font-size:.72rem;color:var(--g4);font-weight:500}
+
+/* Question Card */
+.q-section{padding:32px 0;flex:1}
+.q-card{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;padding:28px;margin-bottom:20px;display:none}
+.q-card.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.q-num{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral-h);margin-bottom:10px}
+.q-text{font-size:1.05rem;font-weight:700;color:var(--dark);line-height:1.3;margin-bottom:20px}
+.q-help{font-size:.78rem;color:var(--g5);margin-bottom:16px;line-height:1.5;font-style:italic}
+
+/* Options */
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{padding:14px 18px;border:1.5px solid #e5e7eb;border-radius:8px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;font-size:.88rem;font-weight:500}
+.opt:hover{border-color:var(--dark);background:var(--off)}
+.opt.selected{border-color:var(--coral);background:var(--coral-dim)}
+.opt-dot{width:18px;height:18px;min-width:18px;border-radius:50%;border:2px solid #e5e7eb;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.opt.selected .opt-dot{border-color:var(--coral);background:var(--coral)}
+.opt.selected .opt-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--wh)}
+.opt-label{flex:1}
+
+/* Navigation */
+.q-nav{display:flex;justify-content:space-between;margin-top:20px}
+.btn{padding:12px 24px;border-radius:8px;font:600 .85rem/1 var(--f);border:0;cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.btn-next{background:var(--coral);color:var(--navy)}.btn-next:hover{background:var(--coral-h)}
+.btn-next:disabled{background:var(--g3);cursor:not-allowed}
+.btn-back{background:transparent;color:var(--g5);border:1.5px solid #e5e7eb}.btn-back:hover{border-color:var(--dark)}
+
+/* Results */
+.results{display:none;padding:32px 0}
+.results.show{display:block;animation:fadeUp .4s ease}
+.r-card{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;padding:32px;text-align:center;margin-bottom:20px}
+.r-score{font-size:3.2rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.r-score.high{color:var(--green)}.r-score.mid{color:var(--amber)}.r-score.low{color:var(--red)}
+.r-label{font-size:.88rem;font-weight:600;color:var(--g5);margin-top:6px}
+.r-verdict{font-size:1.1rem;font-weight:700;color:var(--dark);margin-top:16px}
+.r-desc{font-size:.88rem;color:var(--g5);margin-top:6px;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto}
+
+/* Breakdown */
+.breakdown{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px}
+.bd-title{padding:16px 20px;font-size:.82rem;font-weight:700;color:var(--dark);border-bottom:1px solid #e5e7eb;background:var(--off)}
+.bd-row{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #f3f4f6}
+.bd-row:last-child{border-bottom:0}
+.bd-cat{font-size:.82rem;font-weight:600;color:var(--dark)}
+.bd-score{font-size:.82rem;font-weight:700;padding:3px 10px;border-radius:4px}
+.bd-high{background:rgba(34,197,94,.08);color:var(--green)}
+.bd-mid{background:rgba(245,158,11,.08);color:var(--amber)}
+.bd-low{background:rgba(239,68,68,.08);color:var(--red)}
+
+/* Recommendations */
+.recs{background:var(--wh);border:1px solid #e5e7eb;border-radius:12px;padding:24px;margin-bottom:20px}
+.recs h3{font-size:.92rem;font-weight:700;color:var(--dark);margin-bottom:14px}
+.rec-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:.82rem;color:var(--g6);line-height:1.5}
+.rec-item:last-child{border-bottom:0}
+.rec-icon{width:20px;height:20px;min-width:20px;border-radius:5px;background:var(--coral-dim);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:var(--navy)}
+
+/* Email Gate */
+.gate{background:var(--navy);border-radius:12px;padding:32px;text-align:center;margin-bottom:20px}
+.gate h3{font-size:1rem;font-weight:700;color:var(--wh);margin-bottom:6px}
+.gate p{font-size:.82rem;color:var(--g4);margin-bottom:16px}
+.gate-form{display:flex;gap:8px;max-width:400px;margin:0 auto}
+.gate-input{flex:1;padding:12px 14px;border-radius:8px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--wh);font:500 .85rem/1 var(--f);outline:none}
+.gate-input:focus{border-color:var(--coral)}
+.gate-input::placeholder{color:var(--g4)}
+.gate-btn{padding:12px 20px;border-radius:8px;background:var(--coral);color:var(--navy);font:700 .85rem/1 var(--f);border:0;cursor:pointer}
+.gate-btn:hover{background:var(--coral-h)}
+.gate-note{font-size:.7rem;color:var(--g4);margin-top:10px}
+
+/* CTA section */
+.cta-box{background:var(--off);border:1px solid #e5e7eb;border-radius:12px;padding:28px;text-align:center;margin-bottom:20px}
+.cta-box h3{font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:6px}
+.cta-box p{font-size:.82rem;color:var(--g5);margin-bottom:16px;line-height:1.6}
+.cta-box .btn{padding:14px 28px}
+
+/* Footer */
+footer{padding:20px 0;text-align:center}
+footer p{font-size:.68rem;color:var(--g4)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr"><div class="wrap">
+<div class="logo">Avvoka <span>Readiness Scorecard</span></div>
+<h1>Document Automation Readiness Scorecard</h1>
+<p>Score your firm's document automation maturity in 2 minutes. Get a verdict, a breakdown by category, and specific recommendations.</p>
+</div></div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap"><div class="wrap">
+<div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+<div class="progress-text"><span id="progLabel">Question 1 of 8</span><span id="progPct">0%</span></div>
+</div></div>
+
+<!-- QUESTIONS -->
+<section class="q-section"><div class="wrap">
+
+<div class="q-card active" data-q="1">
+<div class="q-num">Question 1 of 8 — Current Tools</div>
+<div class="q-text">What document automation tool does your firm currently use for legal drafting?</div>
+<div class="q-help">This measures your starting point. The right answer depends on your firm's needs, not which tool costs the most.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">Microsoft Word templates only (manual copy and paste)</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">HotDocs or other legacy automation (requires coding syntax)</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">A CLM platform with some drafting features (Ironclad, DocuSign CLM, Juro)</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Modern no code automation platform with AI drafting capabilities</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back" disabled>Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="2">
+<div class="q-num">Question 2 of 8 — Template Complexity</div>
+<div class="q-text">How complex are the documents your firm needs to automate?</div>
+<div class="q-help">Complex documents have conditional clauses, multi party structures, jurisdiction specific variants, and regulatory language that changes per deal.</div>
+<div class="opts">
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Highly complex: multi jurisdiction, multi party, 50+ conditional clauses per document</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">Moderately complex: standard contracts with conditional clauses and some jurisdiction variants</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">Straightforward: standard templates with basic variable fields (names, dates, amounts)</span></div>
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">Simple: mostly letters, memos, and short form agreements</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="3">
+<div class="q-num">Question 3 of 8 — Associate Satisfaction</div>
+<div class="q-text">How do your associates feel about your current drafting tools?</div>
+<div class="q-help">"We built 200 templates and 3 get used" is a common signal. If associates avoid the tools, you have an adoption problem, not a technology problem.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">They avoid the tools entirely and draft in Word from scratch</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">They use the tools reluctantly but complain about the interface regularly</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">Mixed: some practice groups adopted, others have not</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Strong adoption across practice groups. Associates prefer the tools to manual drafting.</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="4">
+<div class="q-num">Question 4 of 8 — Automation Coverage</div>
+<div class="q-text">What percentage of your firm's high volume documents are currently automated?</div>
+<div class="q-help">High volume documents: NDAs, engagement letters, standard commercial agreements, loan documents, corporate resolutions, employment contracts.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">Less than 10%. Most drafting is still manual.</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">10% to 30%. A few templates exist but coverage is patchy.</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">30% to 60%. Core documents are automated. Complex documents are not.</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">60%+. Most high volume documents have automated templates with conditional logic.</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="5">
+<div class="q-num">Question 5 of 8 — AI Adoption</div>
+<div class="q-text">How is your firm currently using AI in document drafting?</div>
+<div class="q-help">AI in legal drafting ranges from "we banned ChatGPT" to "AI identifies clauses, suggests alternatives, and flags inconsistencies within our precedent standards."</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">No AI in drafting. We may have banned generative AI tools entirely.</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">Associates use ChatGPT or Copilot informally. No firm sanctioned AI for drafting.</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">We are piloting a legal AI tool in one practice group</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">AI is integrated into our drafting workflow: clause identification, precedent matching, and consistency checking</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="6">
+<div class="q-num">Question 6 of 8 — Compliance Requirements</div>
+<div class="q-text">How important are regulatory compliance and audit trails in your document drafting?</div>
+<div class="q-help">Regulated industries (financial services, healthcare, energy) need complete document trails. Multi jurisdiction firms need jurisdiction specific clause management.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">Minimal. Our practice areas have low regulatory requirements.</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">Moderate. Some practice groups need audit trails and version control.</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">High. Most of our work involves regulated industries or cross border compliance.</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">Critical. Every document needs a complete audit trail, jurisdiction tracking, and regulatory compliance logging.</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="7">
+<div class="q-num">Question 7 of 8 — Multi Jurisdiction Needs</div>
+<div class="q-text">How many jurisdictions does your firm regularly draft documents for?</div>
+<div class="q-help">Multi jurisdiction drafting is where legacy tools break down. Managing jurisdiction specific clauses in HotDocs or Word templates creates version control nightmares.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">Single jurisdiction only</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">2 to 5 jurisdictions</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">6 to 15 jurisdictions</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">15+ jurisdictions (global practice)</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next" disabled>Next</button></div>
+</div>
+
+<div class="q-card" data-q="8">
+<div class="q-num">Question 8 of 8 — Time on Manual Drafting</div>
+<div class="q-text">How many hours per week do your associates spend on manual document drafting that could be automated?</div>
+<div class="q-help">Manual drafting includes: copying clauses from precedent documents, adjusting jurisdiction specific language, reformatting templates, and checking consistency across sections.</div>
+<div class="opts">
+<div class="opt" data-val="1"><span class="opt-dot"></span><span class="opt-label">Less than 5 hours per associate per week</span></div>
+<div class="opt" data-val="2"><span class="opt-dot"></span><span class="opt-label">5 to 10 hours per associate per week</span></div>
+<div class="opt" data-val="3"><span class="opt-dot"></span><span class="opt-label">10 to 20 hours per associate per week</span></div>
+<div class="opt" data-val="4"><span class="opt-dot"></span><span class="opt-label">20+ hours per associate per week (drafting is the primary time sink)</span></div>
+</div>
+<div class="q-nav"><button class="btn btn-back">Back</button><button class="btn btn-next">See Results</button></div>
+</div>
+
+</div></section>
+
+<!-- RESULTS -->
+<section class="results" id="results"><div class="wrap">
+
+<div class="r-card" id="rCard">
+<div class="r-score" id="rScore">--</div>
+<div class="r-label">out of 32</div>
+<div class="r-verdict" id="rVerdict"></div>
+<div class="r-desc" id="rDesc"></div>
+</div>
+
+<div class="breakdown" id="breakdown">
+<div class="bd-title">Score Breakdown by Category</div>
+</div>
+
+<div class="recs" id="recs">
+<h3>Your top recommendations</h3>
+</div>
+
+<!-- EMAIL GATE -->
+<div class="gate">
+<h3>Get the full Document Automation Readiness Report</h3>
+<p>We will send you a detailed report with firm specific recommendations, ROI projections, and a 12 week deployment roadmap. Free.</p>
+<div class="gate-form">
+<input type="email" class="gate-input" placeholder="Your work email" id="gateEmail">
+<button class="gate-btn" id="gateBtn">Send Report</button>
+</div>
+<div class="gate-note">No spam. No sales calls unless you ask. Unsubscribe anytime.</div>
+</div>
+
+<!-- CTA -->
+<div class="cta-box">
+<h3>Want a deeper assessment?</h3>
+<p>Book a 15 minute call. We will scope a full document automation audit for your firm. Free. No commitment. The audit is yours whether you choose Avvoka or not.</p>
+<a href="https://cal.com/jean-m-8f4kbr/15min" class="btn btn-next" style="font-size:.88rem">Book Free Assessment</a>
+</div>
+
+</div></section>
+
+<!-- FOOTER -->
+<footer><div class="wrap">
+<p>Document Automation Readiness Scorecard by Avvoka | Lead magnet concept by MDB Growth Capital | Strategy by Jean Mundabi Fala</p>
+</div></footer>
+
+<script>
+const cards=document.querySelectorAll('.q-card');
+const fill=document.getElementById('progFill');
+const progLabel=document.getElementById('progLabel');
+const progPct=document.getElementById('progPct');
+let current=0;
+const answers=new Array(8).fill(0);
+const categories=['Current Tools','Template Complexity','Associate Satisfaction','Automation Coverage','AI Adoption','Compliance Requirements','Multi Jurisdiction Needs','Manual Drafting Time'];
+
+// Option selection
+document.querySelectorAll('.opt').forEach(opt=>{
+  opt.addEventListener('click',()=>{
+    const card=opt.closest('.q-card');
+    card.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected');
+    card.querySelector('.btn-next').disabled=false;
+    const qi=parseInt(card.dataset.q)-1;
+    answers[qi]=parseInt(opt.dataset.val);
+  });
+});
+
+// Navigation
+document.querySelectorAll('.btn-next').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(btn.disabled)return;
+    if(current<7){
+      cards[current].classList.remove('active');
+      current++;
+      cards[current].classList.add('active');
+      updateProgress();
+    }else{
+      showResults();
+    }
+  });
+});
+
+document.querySelectorAll('.btn-back').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(current>0){
+      cards[current].classList.remove('active');
+      current--;
+      cards[current].classList.add('active');
+      updateProgress();
+    }
+  });
+});
+
+function updateProgress(){
+  const pct=Math.round(((current)/8)*100);
+  fill.style.width=pct+'%';
+  progLabel.textContent='Question '+(current+1)+' of 8';
+  progPct.textContent=pct+'%';
+}
+
+function showResults(){
+  document.querySelector('.q-section').style.display='none';
+  document.querySelector('.progress-wrap').style.display='none';
+  const r=document.getElementById('results');
+  r.classList.add('show');
+
+  const total=answers.reduce((a,b)=>a+b,0);
+  const scoreEl=document.getElementById('rScore');
+  const verdictEl=document.getElementById('rVerdict');
+  const descEl=document.getElementById('rDesc');
+
+  scoreEl.textContent=total;
+
+  let verdict,desc,cls;
+  if(total>=28){
+    verdict='Automation Leader';
+    desc='Your firm is ahead of most AmLaw 100 peers. You have strong automation coverage, good associate adoption, and modern tools. Focus on expanding AI integration and capturing firm precedent at scale. You are in the top 10% of law firm automation maturity.';
+    cls='high';
+  }else if(total>=20){
+    verdict='On Track — Close the Gaps';
+    desc='Your firm has a solid foundation but 2 to 3 areas are holding back full value. Most likely: complex documents are still manual, AI is not yet integrated into drafting, or adoption varies by practice group. Fix those gaps and drafting time drops significantly.';
+    cls='mid';
+  }else if(total>=12){
+    verdict='Falling Behind — Your Peer Firms Are Moving';
+    desc='Your firm has basic automation but critical gaps remain. Associates are still spending 10+ hours per week on manual drafting that could be automated. Your competitors at other AmLaw 100 firms are already reducing drafting time by 80%+. The window to catch up is closing.';
+    cls='mid';
+  }else{
+    verdict='At Risk — Manual Drafting Is Costing Your Firm';
+    desc='Your firm operates primarily on manual drafting. Associates spend their most expensive hours on copy and paste work. Your firm precedent lives in partner brains, not systems. When a senior partner retires, that institutional knowledge walks out the door. Immediate action recommended.';
+    cls='low';
+  }
+
+  scoreEl.className='r-score '+cls;
+  verdictEl.textContent=verdict;
+  descEl.textContent=desc;
+
+  // Breakdown
+  const bd=document.getElementById('breakdown');
+  const existingRows=bd.querySelectorAll('.bd-row');
+  existingRows.forEach(r=>r.remove());
+  answers.forEach((a,i)=>{
+    const row=document.createElement('div');
+    row.className='bd-row';
+    let scoreCls=a>=3?'bd-high':a===2?'bd-mid':'bd-low';
+    let scoreLabel=a>=3?'Strong':a===2?'OK':'Weak';
+    row.innerHTML='<span class="bd-cat">'+categories[i]+'</span><span class="bd-score '+scoreCls+'">'+scoreLabel+' ('+a+'/4)</span>';
+    bd.appendChild(row);
+  });
+
+  // Recommendations
+  const recsEl=document.getElementById('recs');
+  const weakAreas=answers.map((a,i)=>({cat:categories[i],score:a,idx:i})).filter(x=>x.score<=2).sort((a,b)=>a.score-b.score);
+
+  const recTexts={
+    0:'Your current tools are holding your firm back. HotDocs syntax and Word templates cannot handle the complexity your practice groups need. Evaluate no code automation platforms that let lawyers build templates without programming. Avvoka reduced drafting time by 84% for firms in your position.',
+    1:'Your documents are complex enough to benefit significantly from automation. Multi jurisdiction, multi party documents with conditional clauses are exactly where automation saves the most time. A no code platform handles this complexity without requiring your knowledge team to write code.',
+    2:'Low associate adoption is the number one reason automation projects fail at law firms. "We built 200 templates and 3 get used" is a tool problem, not a people problem. Switch to tools that associates actually want to use. If the interface feels like 1998, adoption will stay at 12%.',
+    3:'Less than 30% automation coverage means your associates are still doing manual work that machines should handle. Start with your 10 highest volume document types. Automate those first. Each one saves hundreds of hours per year across the firm.',
+    4:'AI in legal drafting is moving fast. Firms that integrate AI now will build precedent libraries that compound over time. The longer you wait, the further behind your firm falls. Start with a controlled pilot: AI clause identification within your existing precedent standards. No hallucination risk.',
+    5:'Your compliance requirements make automation more important, not less. Manual drafting in regulated industries creates risk. Automated templates with audit trails, version control, and jurisdiction tracking reduce compliance exposure while speeding up drafting.',
+    6:'Multi jurisdiction drafting is where legacy tools completely break down. Managing 6+ jurisdiction variants in Word or HotDocs creates version control nightmares. A modern platform handles jurisdiction specific clauses within a single template. One document. Multiple jurisdictions. No manual switching.',
+    7:'Your associates are spending significant hours on manual drafting every week. At associate billing rates of GBP 300 to 500 per hour, even 10 hours per week of automated drafting saves GBP 150K to 250K per associate per year. Multiply by your associate count. The ROI case writes itself.'
+  };
+
+  let recsHTML='<h3>Your top recommendations</h3>';
+  if(weakAreas.length===0){
+    recsHTML+='<div class="rec-item"><span class="rec-icon">+</span><span>No weak areas detected. Your firm is automation ready. Focus on expanding coverage to more practice groups, deepening AI integration, and building your firm precedent library at scale. Consider Avvoka to consolidate your automation stack into a single platform.</span></div>';
+  }else{
+    weakAreas.slice(0,4).forEach(w=>{
+      recsHTML+='<div class="rec-item"><span class="rec-icon">+</span><span>'+recTexts[w.idx]+'</span></div>';
+    });
+  }
+  recsEl.innerHTML=recsHTML;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Email gate
+document.getElementById('gateBtn').addEventListener('click',()=>{
+  const email=document.getElementById('gateEmail').value;
+  if(email&&email.includes('@')){
+    document.querySelector('.gate').innerHTML='<h3 style="color:var(--coral)">Report sent.</h3><p style="color:var(--g4)">Check your inbox. Your personalised Document Automation Readiness Report is on its way. If you do not see it in 5 minutes, check spam.</p>';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giles's Special Package — MDB Growth Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--navy:#0f1729;--navy-light:#1a2744;--white:#ffffff;--off-white:#f7f8fa;
+--accent:#3b82f6;--accent-dark:#2563eb;--green:#22c55e;--yellow:#eab308;--red:#ef4444;
+--text:#1e293b;--text-light:#64748b;--text-lighter:#94a3b8;
+--font-display:'DM Serif Display',Georgia,serif;
+--font-body:'DM Sans',system-ui,sans-serif;
+--max-w:780px;--section-py:80px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-body);color:var(--text);line-height:1.7;background:var(--white);overflow-x:hidden}
+
+/* ── SIDE NAV ── */
+.side-nav{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px}
+.side-nav a{width:10px;height:10px;border-radius:50%;background:var(--text-lighter);display:block;transition:all .3s;position:relative}
+.side-nav a.active{background:var(--accent);transform:scale(1.4)}
+.side-nav a::after{content:attr(data-label);position:absolute;left:22px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text-light);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;font-weight:500;letter-spacing:.02em}
+.side-nav a:hover::after{opacity:1}
+@media(max-width:900px){.side-nav{display:none}}
+
+/* ── SECTIONS ── */
+section{padding:var(--section-py) 24px;position:relative}
+section .inner{max-width:var(--max-w);margin:0 auto}
+.dark{background:var(--navy);color:var(--white)}
+.dark h1,.dark h2,.dark h3,.dark p,.dark li,.dark td,.dark th{color:var(--white)}
+.alt{background:var(--off-white)}
+
+/* ── TYPOGRAPHY ── */
+h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);line-height:1.15;margin-bottom:20px;font-weight:400}
+h2{font-family:var(--font-display);font-size:clamp(1.5rem,3.5vw,2.2rem);line-height:1.2;margin-bottom:16px;font-weight:400}
+h3{font-size:1.1rem;font-weight:700;margin-bottom:10px;letter-spacing:.01em}
+p{margin-bottom:16px;font-size:1rem}
+.subtitle{font-size:1.05rem;color:var(--text-light);margin-bottom:24px;line-height:1.6}
+.dark .subtitle{color:rgba(255,255,255,.7)}
+.label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:block}
+.dark .label{color:rgba(255,255,255,.5)}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:60px;padding-bottom:60px}
+.hero h1{font-size:clamp(2.4rem,6vw,4rem);margin-bottom:12px}
+.hero .tag{display:inline-block;background:rgba(59,130,246,.15);color:var(--accent);padding:6px 16px;border-radius:100px;font-size:.8rem;font-weight:700;letter-spacing:.04em;margin-bottom:28px}
+.dark .hero .tag{background:rgba(59,130,246,.25)}
+.video-placeholder{width:100%;aspect-ratio:16/9;background:var(--navy-light);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:32px 0;border:1px solid rgba(255,255,255,.1);cursor:pointer;position:relative;overflow:hidden}
+.video-placeholder::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(59,130,246,.1),transparent)}
+.video-placeholder .play{width:64px;height:64px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.video-placeholder .play::after{content:'';border:solid var(--white);border-width:0 0 12px 20px;transform:rotate(90deg);margin-left:3px}
+.callout{background:rgba(59,130,246,.08);border-left:3px solid var(--accent);padding:20px 24px;border-radius:0 8px 8px 0;margin:24px 0}
+.dark .callout{background:rgba(59,130,246,.15)}
+.callout p{margin-bottom:8px;font-size:.95rem}
+.callout p:last-child{margin-bottom:0}
+.wild-goal{font-size:1.3rem;font-weight:700;color:var(--accent)}
+.dark .wild-goal{color:#60a5fa}
+.scroll-arrow{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+.scroll-arrow svg{width:24px;height:24px;stroke:rgba(255,255,255,.4);fill:none;stroke-width:2}
+
+/* ── CARDS GRID ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:28px 0}
+.card{background:var(--white);border:1px solid #e2e8f0;border-radius:12px;padding:24px;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08)}
+.card .num{width:32px;height:32px;background:var(--accent);color:var(--white);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;margin-bottom:12px}
+.card h3{font-size:1rem;margin-bottom:8px}
+.card p{font-size:.9rem;color:var(--text-light);margin-bottom:0}
+
+/* ── METRIC CARDS ── */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:28px 0}
+.metric{text-align:center;padding:28px 20px;border-radius:12px;background:var(--off-white);border:1px solid #e2e8f0}
+.metric .number{font-family:var(--font-display);font-size:2.8rem;color:var(--accent);line-height:1}
+.metric .desc{font-size:.85rem;color:var(--text-light);margin-top:8px}
+
+/* ── STEPS ── */
+.steps{counter-reset:step;margin:28px 0}
+.step{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid #e2e8f0;align-items:flex-start}
+.step:last-child{border-bottom:none}
+.step::before{counter-increment:step;content:counter(step);width:36px;height:36px;min-width:36px;background:var(--accent);color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;margin-top:2px}
+.step-content h3{font-size:.95rem;margin-bottom:4px}
+.step-content p{font-size:.9rem;color:var(--text-light);margin-bottom:0}
+
+/* ── CTA ── */
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:28px 0}
+@media(max-width:600px){.cta-grid{grid-template-columns:1fr}}
+.cta-card{padding:32px 24px;border-radius:12px;text-align:center;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05)}
+.cta-card h3{font-size:1.1rem;margin-bottom:8px}
+.cta-card p{font-size:.9rem;opacity:.8;margin-bottom:16px}
+.cta-card .btn{display:inline-block;padding:12px 28px;border-radius:8px;background:var(--accent);color:var(--white);text-decoration:none;font-weight:700;font-size:.9rem;transition:background .2s}
+.cta-card .btn:hover{background:var(--accent-dark)}
+.cta-card .btn.outline{background:transparent;border:2px solid rgba(255,255,255,.3)}
+.cta-card .btn.outline:hover{border-color:var(--white);background:rgba(255,255,255,.05)}
+
+/* ── TRAFFIC LIGHTS ── */
+.traffic-light{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.traffic-light.red{background:rgba(239,68,68,.12);color:var(--red)}
+.traffic-light.yellow{background:rgba(234,179,8,.12);color:#ca8a04}
+.traffic-light.green{background:rgba(34,197,94,.12);color:var(--green)}
+.traffic-light .dot{width:10px;height:10px;border-radius:50%}
+.traffic-light.red .dot{background:var(--red)}
+.traffic-light.yellow .dot{background:var(--yellow)}
+.traffic-light.green .dot{background:var(--green)}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.88rem}
+th{text-align:left;padding:12px 14px;background:var(--navy);color:var(--white);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+th:first-child{border-radius:8px 0 0 0}
+th:last-child{border-radius:0 8px 0 0}
+td{padding:12px 14px;border-bottom:1px solid #e2e8f0;vertical-align:top}
+tr:nth-child(even){background:var(--off-white)}
+.impact{color:var(--green);font-weight:700}
+.total-row{background:rgba(59,130,246,.06)!important;font-weight:700}
+.dark table th{background:rgba(255,255,255,.1)}
+.dark table td{border-color:rgba(255,255,255,.1)}
+.dark table tr:nth-child(even){background:rgba(255,255,255,.03)}
+
+/* ── BIGGEST LEAK ── */
+.biggest-leak{background:var(--navy);color:var(--white);padding:28px;border-radius:12px;margin:28px 0;border-left:4px solid var(--red)}
+.biggest-leak h3{color:var(--red);font-size:1rem;margin-bottom:8px}
+.biggest-leak p{color:rgba(255,255,255,.85);margin-bottom:0}
+
+/* ── PILLARS ── */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:28px 0}
+.pillar{padding:24px;border-radius:12px;background:var(--off-white);border:1px solid #e2e8f0}
+.pillar .pillar-num{font-family:var(--font-display);font-size:2rem;color:var(--accent);line-height:1;margin-bottom:8px}
+.pillar h3{font-size:.95rem;margin-bottom:6px}
+.pillar p{font-size:.85rem;color:var(--text-light);margin-bottom:0}
+.tagline{font-style:italic;color:var(--text-light);margin-top:24px;font-size:1.05rem;text-align:center}
+
+/* ── COMPARISON TABLE ── */
+.comp-table{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid #e2e8f0}
+.comp-table table{margin:0}
+.comp-table th,.comp-table td{white-space:nowrap;text-align:center;padding:10px 12px}
+.comp-table td:first-child,.comp-table th:first-child{text-align:left;font-weight:600}
+.check{color:var(--green)}
+.cross{color:var(--red);opacity:.5}
+
+/* ── WEEK CARDS ── */
+.week-cards{display:flex;flex-direction:column;gap:16px;margin:24px 0}
+.week-card{padding:20px 24px;border-radius:10px;background:var(--white);border:1px solid #e2e8f0;border-left:4px solid var(--accent)}
+.week-card .week-num{font-size:.75rem;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.week-card h3{font-size:.95rem;margin-bottom:6px}
+.week-card p{font-size:.9rem;color:var(--text-light);margin-bottom:0}
+.quick-wins{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:20px 24px;margin-top:24px}
+.quick-wins h3{color:var(--green);margin-bottom:12px}
+.quick-wins li{font-size:.9rem;margin-bottom:8px;padding-left:24px;position:relative;list-style:none}
+.quick-wins li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+
+/* ── TIERS ── */
+.tiers{display:flex;flex-direction:column;gap:16px;margin:24px 0}
+.tier{padding:24px;border-radius:12px;background:var(--off-white);border:1px solid #e2e8f0}
+.tier h3{font-size:1rem;margin-bottom:4px}
+.tier .conversion{font-size:.85rem;color:var(--accent);font-weight:700;margin-bottom:8px}
+
+/* ── TIMELINE ── */
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:28px 0}
+.timeline-card{border-radius:12px;overflow:hidden;background:var(--white);border:1px solid #e2e8f0}
+.timeline-card .timeline-header{padding:12px 20px;font-weight:700;font-size:.9rem;color:var(--white);background:var(--accent)}
+.timeline-card ul{padding:16px 20px 20px 36px;font-size:.88rem;color:var(--text-light)}
+.timeline-card li{margin-bottom:6px}
+
+/* ── CASE STUDY ── */
+.case-phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:24px 0}
+.case-phase{padding:24px;border-radius:12px}
+.case-phase.context{background:#f1f5f9}
+.case-phase.action{background:var(--white);border:1px solid #e2e8f0}
+.case-phase.result{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15)}
+.case-phase h3{font-size:.85rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px}
+
+/* ── METHODOLOGY FLOW ── */
+.method-flow{display:flex;gap:8px;margin:28px 0;overflow-x:auto;padding-bottom:8px}
+@media(max-width:700px){.method-flow{flex-direction:column}}
+.method-step{flex:1;min-width:140px;padding:20px;border-radius:10px;background:var(--off-white);border:1px solid #e2e8f0;text-align:center;position:relative}
+.method-step .method-num{width:28px;height:28px;background:var(--accent);color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin:0 auto 10px}
+.method-step h3{font-size:.85rem;margin-bottom:4px}
+.method-step p{font-size:.78rem;color:var(--text-light);margin-bottom:0}
+.method-arrow{display:flex;align-items:center;color:var(--text-lighter);font-size:1.2rem}
+@media(max-width:700px){.method-arrow{justify-content:center;transform:rotate(90deg)}}
+
+/* ── FAQ ACCORDION ── */
+.faq-list{margin:24px 0}
+.faq-item{border-bottom:1px solid #e2e8f0}
+.faq-q{padding:18px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.95rem;user-select:none}
+.faq-q::after{content:'+';font-size:1.4rem;color:var(--accent);transition:transform .3s;font-weight:300}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;font-size:.9rem;color:var(--text-light);line-height:1.7}
+.faq-item.open .faq-a{max-height:400px;padding-bottom:18px}
+
+/* ── ABOUT ── */
+.about-card{display:flex;gap:24px;align-items:flex-start;margin:24px 0}
+@media(max-width:600px){.about-card{flex-direction:column;align-items:center;text-align:center}}
+.avatar{width:80px;height:80px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2rem;color:var(--white);min-width:80px}
+.about-info h3{font-size:1.1rem;margin-bottom:2px}
+.about-info .title-role{color:var(--text-light);font-size:.9rem;margin-bottom:12px}
+.about-info p{font-size:.9rem}
+.linkedin-btn{display:inline-block;padding:8px 20px;border-radius:6px;background:var(--accent);color:var(--white);text-decoration:none;font-size:.85rem;font-weight:600;margin-top:8px;transition:background .2s}
+.linkedin-btn:hover{background:var(--accent-dark)}
+
+/* ── FOOTER ── */
+.closing{font-size:1.1rem;line-height:1.7;margin:20px 0}
+.signature{margin-top:24px;font-style:italic;opacity:.7;font-size:.9rem}
+.footer-bar{text-align:center;padding:20px;font-size:.78rem;color:var(--text-lighter);border-top:1px solid rgba(255,255,255,.1)}
+.dark .footer-bar{border-top-color:rgba(255,255,255,.1)}
+</style>
+</head>
+<body>
+
+<!-- SIDE NAV -->
+<nav class="side-nav" id="sideNav">
+<a href="#hero" data-label="Package" class="active"></a>
+<a href="#inside" data-label="Inside"></a>
+<a href="#why" data-label="Why Now"></a>
+<a href="#cred" data-label="Credibility"></a>
+<a href="#gift" data-label="Gift"></a>
+<a href="#cta1" data-label="Get Started"></a>
+<a href="#leak1" data-label="Attraction"></a>
+<a href="#leak2" data-label="Alignment"></a>
+<a href="#leak3" data-label="Activation"></a>
+<a href="#levers" data-label="Money Levers"></a>
+<a href="#pillars" data-label="Funnel"></a>
+<a href="#competition" data-label="Competition"></a>
+<a href="#gap" data-label="The Gap"></a>
+<a href="#funnel" data-label="Funnel"></a>
+<a href="#weeks1" data-label="Weeks 1-6"></a>
+<a href="#weeks2" data-label="Weeks 7-12"></a>
+<a href="#sample" data-label="US Expansion"></a>
+<a href="#results" data-label="Results"></a>
+<a href="#casestudy" data-label="Case Study"></a>
+<a href="#method" data-label="Approach"></a>
+<a href="#faq" data-label="FAQ"></a>
+<a href="#about" data-label="About"></a>
+<a href="#offer" data-label="Offer"></a>
+<a href="#cta2" data-label="Get Started"></a>
+</nav>
+
+<!-- SECTION 1: HERO -->
+<section class="dark hero" id="hero">
+<div class="inner">
+<span class="tag reveal">MDB GROWTH CAPITAL</span>
+<h1 class="reveal reveal-delay-1">Giles's Special Package</h1>
+<p class="subtitle reveal reveal-delay-2">A Demand Gen Blueprint for Avvoka — How to Build Marketing Sourced Pipeline at the GBP 5M to GBP 20M Inflection Point</p>
+<div class="video-placeholder reveal reveal-delay-3" id="videoEmbed">
+<div class="play"></div>
+</div>
+<div class="callout reveal">
+<p><strong>How This Document Can Help You</strong></p>
+<p>This doc was crafted solely for you, Giles. Every page is built around Avvoka's inflection point right now. It maps exactly what a demand generation engine looks like for a company that grew to GBP 5M on product alone.</p>
+<p class="wild-goal">Our wild goal? GBP 3M to GBP 6M in marketing sourced pipeline within 12 months. From firms that have never heard of Avvoka.</p>
+</div>
+</div>
+<div class="scroll-arrow"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+</section>
+
+<!-- SECTION 2: WHAT'S INSIDE -->
+<section id="inside">
+<div class="inner">
+<span class="label reveal">What You Get</span>
+<h2 class="reveal">What's Inside Your Package?</h2>
+<div class="cards-grid">
+<div class="card reveal"><div class="num">1</div><h3>The AAA Acquisition Diagnostic</h3><p>Full diagnostic of Avvoka's acquisition system. Attraction. Alignment. Activation. Every layer scored.</p></div>
+<div class="card reveal reveal-delay-1"><div class="num">2</div><h3>The Leak Map</h3><p>Where pipeline drops off. Why 80% of AmLaw 100 firms don't know Avvoka exists. The biggest leak quantified.</p></div>
+<div class="card reveal reveal-delay-2"><div class="num">3</div><h3>The Money Levers</h3><p>7 highest impact fixes ranked by estimated GBP revenue. From legal buyer channels to US expansion ABM.</p></div>
+<div class="card reveal reveal-delay-3"><div class="num">4</div><h3>90 Day Demand Gen Roadmap</h3><p>Week by week sprint plan. Infrastructure first. Experiments next. Scale winners by day 90.</p></div>
+<div class="card reveal"><div class="num">5</div><h3>10 Experiment Framework</h3><p>10 specific experiments for the first 90 days. Hypotheses, budgets, success criteria. Built for legal tech.</p></div>
+<div class="card reveal reveal-delay-1"><div class="num">6</div><h3>How Avvoka Gets More Leads and Converts Them</h3><p>Your full funnel mapped stage by stage. What is missing, what we would install, and how each stage feeds the next.</p></div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 3: WHY AVVOKA -->
+<section class="alt" id="why">
+<div class="inner">
+<span class="label reveal">The Research</span>
+<h2 class="reveal">Why Avvoka? Why Now?</h2>
+<div class="callout reveal">
+<p><strong>First: the JD.</strong><br>Your Growth Marketing Manager posting says "Avvoka has grown primarily through product strength and word of mouth. Now we need someone who can build the engine that turns that momentum into scalable, repeatable growth." That is not an optimisation job. That is a build from zero job.</p>
+</div>
+<div class="callout reveal">
+<p><strong>Second: the numbers.</strong><br>GBP 250K to GBP 5M ARR in four years. 100% YoY growth. Bootstrapped on GBP 600K angel funding. 20%+ of AmLaw 100 as customers. A&O Shearman, Fenwick, Fried Frank, Ropes & Gray. And now GBP 14M from Valhalla Ventures. The product has won. The growth engine has not caught up.</p>
+</div>
+<div class="callout reveal">
+<p><strong>Third: the ceiling.</strong><br>Word of mouth scales linearly. The next GBP 5M cannot come from the same approach running harder. The 80% of AmLaw 100 that haven't adopted Avvoka need to be found. That requires a system.</p>
+</div>
+<p class="reveal" style="margin-top:20px">You are hiring someone to build this. MDB Growth Capital can install the framework they execute on day one.</p>
+</div>
+</section>
+
+<!-- SECTION 4: CREDIBILITY -->
+<section id="cred">
+<div class="inner">
+<span class="label reveal">Why Listen To Us</span>
+<h2 class="reveal">The package itself is the proof.</h2>
+<p class="subtitle reveal">Everything in this document is based on direct research into Avvoka's funding, JD intelligence, competitive landscape, and legal buyer acquisition patterns. Not a template. A built thing.</p>
+<div class="metrics reveal">
+<div class="metric"><div class="number">15%</div><div class="desc">SMB revenue growth at BT/EE through systematic multi channel optimisation</div></div>
+<div class="metric"><div class="number">£260K</div><div class="desc">Annual CAC savings at Santander across paid media channels</div></div>
+<div class="metric"><div class="number">20%</div><div class="desc">Conversion improvement on Santander current account repositioning</div></div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 5: GIFT -->
+<section class="alt" id="gift">
+<div class="inner">
+<span class="label reveal">Our Gift</span>
+<h2 class="reveal">The Demand Gen Blueprint</h2>
+<p class="reveal">Here is what you get, for free, in this document:</p>
+<ul class="reveal" style="margin:16px 0 28px 20px;font-size:.95rem">
+<li>The full AAA diagnostic. Scored. Evidenced. Actionable.</li>
+<li>7 Money Levers ranked by estimated GBP impact.</li>
+<li>10 experiments ready to run. Hypotheses, budgets, success criteria.</li>
+<li>US expansion demand gen playbook.</li>
+<li>Competitive positioning vs HotDocs, Ironclad, Juro, DocuSign CLM.</li>
+</ul>
+<h3 class="reveal">How it works if you want to go further:</h3>
+<div class="steps reveal">
+<div class="step"><div class="step-content"><h3>Read this document</h3><p>Take what is useful. No strings attached.</p></div></div>
+<div class="step"><div class="step-content"><h3>Reply or book a call</h3><p>15 minutes. No pitch. Just a conversation.</p></div></div>
+<div class="step"><div class="step-content"><h3>We audit your data</h3><p>CRM, website analytics, pipeline metrics.</p></div></div>
+<div class="step"><div class="step-content"><h3>MDB builds the infrastructure</h3><p>Paid campaigns, attribution, nurture, experimentation framework.</p></div></div>
+<div class="step"><div class="step-content"><h3>Your hire executes</h3><p>Growth Marketing Manager runs the system. We provide the framework.</p></div></div>
+<div class="step"><div class="step-content"><h3>30 day review</h3><p>Scale what works. Kill what doesn't.</p></div></div>
+<div class="step"><div class="step-content"><h3>Repeatable engine</h3><p>Avvoka has a demand gen engine that produces measurable pipeline.</p></div></div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 6: CTA -->
+<section class="dark" id="cta1">
+<div class="inner" style="text-align:center">
+<h2 class="reveal">2 Options To Get Started</h2>
+<div class="cta-grid reveal">
+<div class="cta-card"><h3>Just Reply</h3><p>Reply to the email this came with. Tell me what stood out. I will respond within 24 hours.</p><a class="btn outline" href="mailto:">Reply to Email</a></div>
+<div class="cta-card"><h3>Book A Call</h3><p>15 minute slot. No pitch. Just a conversation about Avvoka's demand gen challenge.</p><a class="btn" href="https://cal.com/jean-m-8f4kbr/15min" target="_blank">Book 15 Minutes</a></div>
+</div>
+<p class="reveal" style="margin-top:20px;opacity:.6;font-size:.9rem">No commitment either way. Read the document first. Then decide.</p>
+</div>
+</section>
+
+<!-- SECTION 7: LEAK MAP - ATTRACTION -->
+<section id="leak1">
+<div class="inner">
+<span class="label reveal">AAA Diagnostic</span>
+<h2 class="reveal">The Leak Map: Attraction Layer</h2>
+<div class="reveal"><span class="traffic-light red"><span class="dot"></span>RED</span></div>
+<p class="reveal" style="margin-top:16px">Avvoka has no marketing sourced traffic. Every pound of pipeline comes from one source: Giles Thompson's personal network, conference relationships, and client referrals.</p>
+<table class="reveal">
+<thead><tr><th>Source</th><th>Current</th><th>Scalable?</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><strong>Giles's network</strong></td><td>Primary driver</td><td>No. Finite.</td><td>Ceiling-bound</td></tr>
+<tr><td><strong>Conference demos</strong></td><td>Secondary</td><td>Partially</td><td>Not systematic</td></tr>
+<tr><td><strong>Client referrals</strong></td><td>Organic</td><td>No</td><td>Passive</td></tr>
+<tr><td><strong>Paid acquisition</strong></td><td>GBP 0</td><td>Yes</td><td>Does not exist</td></tr>
+<tr><td><strong>Content marketing</strong></td><td>Minimal</td><td>Yes</td><td>Barely started</td></tr>
+<tr><td><strong>ABM for AmLaw 100</strong></td><td>None</td><td>Yes</td><td>Does not exist</td></tr>
+<tr><td><strong>Analyst relations</strong></td><td>None</td><td>Yes</td><td>Does not exist</td></tr>
+</tbody>
+</table>
+<div class="callout reveal">
+<p><strong>The diagnosis:</strong> 100% of pipeline comes from channels that scale linearly. Zero pipeline comes from channels that scale exponentially. The GBP 14M raise funds growth, but there is no marketing engine to convert that capital into pipeline.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 8: LEAK MAP - ALIGNMENT -->
+<section class="alt" id="leak2">
+<div class="inner">
+<h2 class="reveal">The Leak Map: Alignment Layer</h2>
+<div class="reveal"><span class="traffic-light yellow"><span class="dot"></span>YELLOW</span></div>
+<table class="reveal" style="margin-top:16px">
+<thead><tr><th>Touchpoint</th><th>Current</th><th>Problem</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><strong>avvoka.com</strong></td><td>Professional, clear</td><td>Built for warm visitors. Not for cold marketing traffic.</td><td>Dedicated landing pages per persona</td></tr>
+<tr><td><strong>Demo flow</strong></td><td>"Book a Demo" CTA</td><td>No self-serve for prospects not ready</td><td>Gated demo video for Solution Aware</td></tr>
+<tr><td><strong>Case studies</strong></td><td>Exist but buried</td><td>"Full day to 90 minutes" is powerful but hidden</td><td>Surface on homepage above the fold</td></tr>
+<tr><td><strong>Social proof</strong></td><td>"20%+ of AmLaw 100"</td><td>Strong but generic. No named outcomes.</td><td>Named firm testimonials with metrics</td></tr>
+</tbody>
+</table>
+<div class="callout reveal">
+<p><strong>The diagnosis:</strong> The website works for warm introductions. Marketing traffic is colder. A CKO who clicks a LinkedIn ad needs named case studies, competitive comparisons, and an ROI calculator. None exist.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 9: LEAK MAP - ACTIVATION -->
+<section id="leak3">
+<div class="inner">
+<h2 class="reveal">The Leak Map: Activation Layer</h2>
+<div class="reveal"><span class="traffic-light yellow"><span class="dot"></span>YELLOW</span></div>
+<table class="reveal" style="margin-top:16px">
+<thead><tr><th>Stage</th><th>Conversion</th><th>Problem</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><strong>Visit to demo</strong></td><td>Unknown</td><td>No attribution</td><td>HubSpot from day one</td></tr>
+<tr><td><strong>Demo to 2nd meeting</strong></td><td>40 to 60%</td><td>No structured follow-up</td><td>Post-demo nurture sequence</td></tr>
+<tr><td><strong>2nd to proposal</strong></td><td>30 to 50%</td><td>6 to 12+ month cycles</td><td>Multi-stakeholder content tracks</td></tr>
+<tr><td><strong>Proposal to close</strong></td><td>Unknown</td><td>No win rate data</td><td>CRM pipeline with benchmarks</td></tr>
+</tbody>
+</table>
+<div class="biggest-leak reveal">
+<h3>THE BIGGEST LEAK: ATTRACTION</h3>
+<p>Avvoka has zero marketing sourced pipeline. Every opportunity comes from relationships. The 80% of AmLaw 100 that haven't adopted Avvoka are unreachable through current channels. Build the Attraction layer first.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 10: MONEY LEVERS -->
+<section class="alt" id="levers">
+<div class="inner">
+<span class="label reveal">Priority Fixes</span>
+<h2 class="reveal">The Money Levers</h2>
+<p class="subtitle reveal">7 fixes ranked by estimated annual revenue impact</p>
+<table class="reveal">
+<thead><tr><th>#</th><th>Lever</th><th>Current</th><th>Fix</th><th>Impact</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>Legal Buyer Channels</strong></td><td>Zero paid</td><td>LinkedIn for CKOs + Google for "HotDocs alternative" + conference ABM</td><td class="impact">GBP 1M to 2M</td></tr>
+<tr><td>2</td><td><strong>US Expansion ABM</strong></td><td>No US pipeline</td><td>ABM for 80 non-customer AmLaw 100 firms</td><td class="impact">GBP 800K to 1.5M</td></tr>
+<tr><td>3</td><td><strong>Peer Referral Programme</strong></td><td>Organic</td><td>Formal programme with 10 champions. Tracked in CRM.</td><td class="impact">GBP 500K to 1M</td></tr>
+<tr><td>4</td><td><strong>HotDocs Migration</strong></td><td>No strategy</td><td>"Switching from HotDocs?" landing page + campaign</td><td class="impact">GBP 400K to 800K</td></tr>
+<tr><td>5</td><td><strong>Analyst Relations</strong></td><td>None</td><td>Featured in ALM Intelligence and Gartner within 12 months</td><td class="impact">GBP 300K to 600K</td></tr>
+<tr><td>6</td><td><strong>Content + Thought Leadership</strong></td><td>Minimal</td><td>3 category-defining articles on "drafting infrastructure"</td><td class="impact">GBP 200K to 500K</td></tr>
+<tr><td>7</td><td><strong>Marketing Attribution</strong></td><td>Zero</td><td>HubSpot with full attribution. Board-ready reporting.</td><td class="impact">Enables all</td></tr>
+<tr class="total-row"><td></td><td colspan="3"><strong>Conservative total</strong></td><td class="impact">GBP 3.2M to 6.4M</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- SECTION 11: FUNNEL CASCADE -->
+<section id="pillars">
+<div class="inner">
+<span class="label reveal">How It All Connects</span>
+<h2 class="reveal">How Avvoka Gets More Leads and Converts Them</h2>
+<p class="sub reveal">Your full funnel mapped. Each stage shows what happens now, what is missing, and what we would install.</p>
+
+<div class="pillars" style="display:grid;grid-template-columns:1fr;gap:0;margin:24px 0">
+<div class="pillar reveal" style="padding:20px;border:1px solid rgba(255,89,36,.2);border-radius:10px 10px 0 0;background:rgba(255,89,36,.04)">
+<h3 style="color:var(--accent,#FF5924)">Top of Funnel: Getting Found</h3>
+<p><strong>Now:</strong> Giles's law firm relationships. Conference demos. Word of mouth.</p>
+<p><strong>Missing:</strong> Paid acquisition (zero spend). Google Search for "HotDocs alternative." LinkedIn ABM targeting CKOs at the other 80 AmLaw firms.</p>
+<p><strong>Install:</strong> Conference pre-event campaigns. Google Search for competitive terms. LinkedIn ABM. Analyst briefing programme.</p>
+</div>
+<div class="pillar reveal reveal-delay-1" style="padding:20px;border:1px solid rgba(245,158,11,.2);border-top:0;background:rgba(245,158,11,.04)">
+<h3 style="color:#f59e0b">Middle of Funnel: Nurture and Educate</h3>
+<p><strong>Now:</strong> Giles runs demos personally. No follow-up system after demo.</p>
+<p><strong>Missing:</strong> Post-demo nurture. Multi-stakeholder content tracks (CKO, IT, Finance, Managing Partner). Peer referral programme.</p>
+<p><strong>Install:</strong> HubSpot nurture sequences by stakeholder. Comparison content. ROI calculator. Giles's thought leadership calendar.</p>
+</div>
+<div class="pillar reveal reveal-delay-2" style="padding:20px;border:1px solid rgba(34,197,94,.2);border-top:0;background:rgba(34,197,94,.04)">
+<h3 style="color:#22c55e">Bottom of Funnel: Convert</h3>
+<p><strong>Now:</strong> Demos lead to procurement. 6 to 18 month buying cycles.</p>
+<p><strong>Missing:</strong> Boardroom-ready business case templates. Named firm case studies. Security documentation for IT review.</p>
+<p><strong>Install:</strong> Business case template for CKOs. Named case studies. Security pack. Multi-touch attribution.</p>
+</div>
+<div class="pillar reveal" style="padding:20px;border:1px solid rgba(139,92,246,.2);border-top:0;border-radius:0 0 10px 10px;background:rgba(139,92,246,.04)">
+<h3 style="color:#8b5cf6">Sale: Expand and Retain</h3>
+<p><strong>Now:</strong> Enterprise deals close. Expansion is manual.</p>
+<p><strong>Missing:</strong> Land-and-expand triggers. Usage-based upsell. QBR framework.</p>
+<p><strong>Install:</strong> Expansion playbook. Usage monitoring. QBR framework showing ROI to drive renewal.</p>
+</div>
+</div>
+
+<p class="tagline reveal">Every stage feeds the next. Fix Top first. The other 80 AmLaw firms need to hear about Avvoka before they can buy.</p>
+</div>
+</section>
+
+<!-- SECTION 12: COMPETITION -->
+<section class="alt" id="competition">
+<div class="inner">
+<span class="label reveal">Market Position</span>
+<h2 class="reveal">Drafting Infrastructure Is an Unclaimed Category</h2>
+<div class="comp-table reveal">
+<table>
+<thead><tr><th>Factor</th><th>Avvoka</th><th>HotDocs</th><th>Ironclad</th><th>Juro</th><th>DocuSign</th></tr></thead>
+<tbody>
+<tr><td>Purpose built for law firms</td><td class="check">&#10003; Core</td><td>Legacy</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+<tr><td>No-code automation</td><td class="check">&#10003;</td><td>Limited</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+<tr><td>Complex document handling</td><td class="check">&#10003; Core</td><td class="check">&#10003;</td><td>Limited</td><td>Limited</td><td class="cross">&#10007;</td></tr>
+<tr><td>AI-assisted drafting</td><td class="check">&#10003; LLM</td><td>Limited</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td>Limited</td></tr>
+<tr><td>Firm precedent system</td><td class="check">&#10003; Unique</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+<tr><td>AmLaw 100 presence</td><td><strong>20%+</strong></td><td>High</td><td>Growing</td><td>Low</td><td>Medium</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout reveal">
+<p>Nobody owns "drafting infrastructure." HotDocs is legacy. Ironclad is CLM. Juro is commercial. DocuSign is signing. Avvoka has the credibility (20%+ AmLaw 100) and the funding (GBP 14M) to claim the category. What is missing is the demand gen engine.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 13: THE GAP -->
+<section id="gap">
+<div class="inner">
+<span class="label reveal">The Insight</span>
+<h2 class="reveal">Why Law Firm Partners Don't Respond to Marketing</h2>
+<p class="reveal"><strong>What doesn't work:</strong> Cold LinkedIn messages from SDRs. Generic "AI powered" messaging. Feature comparison decks. Urgency tactics.</p>
+<p class="reveal"><strong>What does work:</strong></p>
+<ul class="reveal" style="margin:0 0 20px 20px;font-size:.95rem">
+<li><strong>Peer validation:</strong> "A&O Shearman uses this. Here is what their CKO says."</li>
+<li><strong>Conference presence:</strong> ILTA and Legalweek booth demos with pre-booked meetings</li>
+<li><strong>Analyst coverage:</strong> ALM Intelligence ranking. Gartner mention.</li>
+<li><strong>Thought leadership:</strong> Giles publishing on "drafting infrastructure" as a category</li>
+<li><strong>Warm referrals:</strong> Structured referral programme through existing champions</li>
+</ul>
+<div class="biggest-leak reveal" style="background:var(--navy)">
+<h3 style="color:var(--accent)">The demand gen engine for Avvoka looks nothing like demand gen for a typical SaaS company.</h3>
+<p>It is built around peer trust, conference relationships, and analyst validation. The Growth Marketing Manager needs to understand this on day one. This blueprint ensures they do.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 14: FUNNEL -->
+<section class="alt" id="funnel">
+<div class="inner">
+<span class="label reveal">The System</span>
+<h2 class="reveal">How Each Sprint Connects</h2>
+<table class="reveal">
+<thead><tr><th>Sprint</th><th>What Gets Built</th><th>What It Unlocks</th></tr></thead>
+<tbody>
+<tr><td><strong>Days 1 to 30</strong></td><td>Attribution, first campaigns, landing pages</td><td>Baseline data. First marketing sourced demos. Proof it works.</td></tr>
+<tr><td><strong>Days 31 to 60</strong></td><td>Referral programme, HotDocs campaign, conference ABM</td><td>Expanded pipeline. Competitor displacement. Pre-event meetings.</td></tr>
+<tr><td><strong>Days 61 to 90</strong></td><td>Analyst briefings, thought leadership, documentation</td><td>Category positioning. Repeatable playbook. Board-ready metrics.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- SECTION 15: WEEKS 1-6 -->
+<section id="weeks1">
+<div class="inner">
+<span class="label reveal">90 Day Roadmap</span>
+<h2 class="reveal">Weeks 1 to 6: Infrastructure and First Tests</h2>
+<div class="week-cards">
+<div class="week-card reveal"><div class="week-num">Week 1</div><h3>Attribution Foundation</h3><p>Install HubSpot with full attribution. Every lead traceable. Pipeline stages matching Avvoka's sales process.</p></div>
+<div class="week-card reveal"><div class="week-num">Week 2</div><h3>Landing Pages and Persona Journeys</h3><p>3 dedicated pages: CKOs ("Firm precedent, codified"), Innovation Partners ("No-code automation"), HotDocs migrants ("20% of AmLaw 100 chose Avvoka").</p></div>
+<div class="week-card reveal"><div class="week-num">Week 3</div><h3>First Paid Campaigns</h3><p>LinkedIn targeting Innovation Partners and CKOs at AmLaw 100. Google: "HotDocs alternative," "legal document automation."</p></div>
+<div class="week-card reveal"><div class="week-num">Week 4</div><h3>Baseline Metrics</h3><p>Measure CPL, demo request rate, lead quality. Go/no-go: LinkedIn CPL under GBP 200 with demos from target titles? Scale or diagnose.</p></div>
+<div class="week-card reveal"><div class="week-num">Week 5</div><h3>Peer Referral Programme</h3><p>10 champion users across A&O Shearman, Fenwick, Ropes & Gray. Shareable assets. Track referrals in HubSpot.</p></div>
+<div class="week-card reveal"><div class="week-num">Week 6</div><h3>HotDocs Migration Campaign</h3><p>"Switching from HotDocs?" landing page. LinkedIn ads targeting firms with HotDocs. Google ads on comparison terms.</p></div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 16: WEEKS 7-12 -->
+<section class="alt" id="weeks2">
+<div class="inner">
+<h2 class="reveal">Weeks 7 to 12: Scale and Establish</h2>
+<div class="week-cards">
+<div class="week-card reveal"><div class="week-num">Week 7</div><h3>Scale Winners</h3><p>3x budget on what works. New creative angles. Kill underperformers.</p></div>
+<div class="week-card reveal"><div class="week-num">Week 8</div><h3>Conference ABM</h3><p>Next ILTA or Legalweek event. LinkedIn ads to attendee list. Email sequence to 20 target firms. 15+ pre-booked meetings.</p></div>
+<div class="week-card reveal"><div class="week-num">Week 9</div><h3>Analyst Briefings</h3><p>Brief ALM Intelligence and Gartner on "drafting infrastructure" positioning. Goal: featured mention.</p></div>
+<div class="week-card reveal"><div class="week-num">Week 10</div><h3>Thought Leadership</h3><p>3 articles: "Why document automation is dead," "The firm precedent problem," "From drafting to infrastructure."</p></div>
+<div class="week-card reveal"><div class="week-num">Week 11</div><h3>Post-Demo Nurture</h3><p>5 email sequence. Multi-stakeholder tracks: CKO (ROI), IT (security), Finance (budget), Managing Partner (risk).</p></div>
+<div class="week-card reveal"><div class="week-num">Week 12</div><h3>Playbook Documentation</h3><p>Document everything. Hand to the Growth Marketing Manager. They execute from day one, not month four.</p></div>
+</div>
+<div class="quick-wins reveal">
+<h3>Quick Wins (Starting Now)</h3>
+<ul>
+<li>Surface the "90 minutes" case study stat on the homepage above the fold</li>
+<li>Create an "Avvoka vs HotDocs" comparison page for SEO</li>
+<li>Launch LinkedIn ads targeting Innovation Partners at 20 non-customer AmLaw 100 firms</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- SECTION 17: SAMPLE - US EXPANSION -->
+<section id="sample">
+<div class="inner">
+<span class="label reveal">Sample Deliverable</span>
+<h2 class="reveal">US Expansion: Reaching the 80% of AmLaw 100</h2>
+<div class="tiers">
+<div class="tier reveal">
+<h3>Tier 1: Warm Expansion (20 firms)</h3>
+<div class="conversion">Expected conversion: 15 to 25% to demo</div>
+<p>Firms where Avvoka has a relationship but not a deal. Personalised Giles outreach with research package. "I noticed [specific signal]. Here is what firms like yours are doing with drafting infrastructure."</p>
+</div>
+<div class="tier reveal">
+<h3>Tier 2: HotDocs Displacement (30 firms)</h3>
+<div class="conversion">Expected conversion: 10 to 15% to demo</div>
+<p>Firms currently using HotDocs. Identified via job postings and LinkedIn profiles. "Switching from HotDocs?" campaign with comparison landing page + targeted ads + CKO outreach.</p>
+</div>
+<div class="tier reveal">
+<h3>Tier 3: Cold but Qualified (30 firms)</h3>
+<div class="conversion">Expected conversion: 5 to 10% to demo</div>
+<p>Remaining AmLaw 100 with no relationship. Multi-touch ABM: LinkedIn awareness (4 weeks) then thought leadership then personalised outreach then conference meeting.</p>
+</div>
+</div>
+<div class="callout reveal">
+<p><strong>Total addressable:</strong> 80 non-customer AmLaw 100 firms<br>
+<strong>12 month target:</strong> 20 to 30 qualified demo meetings<br>
+<strong>Pipeline value:</strong> GBP 800K to GBP 1.5M</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 18: KEY RESULTS -->
+<section class="alt" id="results">
+<div class="inner">
+<span class="label reveal">Projected Outcomes</span>
+<h2 class="reveal">What Changes</h2>
+<div class="timeline reveal">
+<div class="timeline-card"><div class="timeline-header">30 Days</div><ul><li>HubSpot attribution live</li><li>First campaigns running</li><li>Baseline CPL established</li><li>Referral programme launched</li></ul></div>
+<div class="timeline-card"><div class="timeline-header">90 Days</div><ul><li>3 to 5 marketing sourced demos/month</li><li>HotDocs migration generating traffic</li><li>Conference ABM: 15+ meetings</li><li>10+ experiments completed</li></ul></div>
+<div class="timeline-card"><div class="timeline-header">12 Months</div><ul><li>30 to 50% marketing sourced pipeline</li><li>20+ US AmLaw 100 opportunities</li><li>ARR: GBP 15M to 20M trajectory</li><li>Gartner/ALM Intelligence mention</li></ul></div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 19: CASE STUDY -->
+<section id="casestudy">
+<div class="inner">
+<span class="label reveal">Proof</span>
+<h2 class="reveal">How BT Built a Demand Gen Engine from Nothing</h2>
+<div class="case-phases reveal">
+<div class="case-phase context"><h3>Context</h3><p>BT/EE's SMB marketing produced campaigns but had no system connecting spend to revenue. Multiple channels. No single source of truth.</p></div>
+<div class="case-phase action"><h3>Action</h3><p>Jean built the single source of truth from scratch. Weekly trading sessions. Identified which channels drove revenue and reallocated budget systematically.</p></div>
+<div class="case-phase result"><h3>Result</h3><p><strong style="font-size:1.3rem">15%</strong> SMB revenue growth<br><strong style="font-size:1.3rem">25%</strong> lead acquisition improvement<br>Permanent cross-functional tiger team still operates today</p></div>
+</div>
+<div class="callout reveal">
+<p><strong>Why this matters for Avvoka:</strong> Same inflection point. Strong product, strong relationships, but no marketing infrastructure connecting activity to revenue. Jean built that infrastructure at BT. The same architecture applies to Avvoka's legal buyer pipeline.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 20: GROWTH FEEDBACK LOOP -->
+<section class="alt" id="method">
+<div class="inner">
+<span class="label reveal">The Compounding Engine</span>
+<h2 class="reveal">How Avvoka Builds a Growth Engine That Compounds</h2>
+<p class="sub reveal">Three loops. Each one feeds the others. The longer they run, the stronger they get.</p>
+<div class="method-flow reveal" style="display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px">
+<div class="method-step" style="padding:20px;border-radius:10px;border:1px solid rgba(255,89,36,.15);background:rgba(255,89,36,.03)">
+<h3 style="margin-bottom:8px">Loop 1: Conference to Pipeline</h3>
+<p>Every ILTA and Legalweek appearance generates leads AND content. Recorded demos become website assets. Panel quotes become LinkedIn posts. CKO conversations become case study seeds. One conference feeds 3 months of demand gen content.</p>
+</div>
+<div class="method-step" style="padding:20px;border-radius:10px;border:1px solid rgba(34,197,94,.15);background:rgba(34,197,94,.03)">
+<h3 style="margin-bottom:8px">Loop 2: Case Study Growth Loop</h3>
+<p>Avvoka already has 20% of AmLaw 100. Each one is a proof point. Their stories feed better ads, better comparison pages, better analyst briefings, and better conference pitches. Every new client makes every acquisition channel sharper.</p>
+</div>
+<div class="method-step" style="padding:20px;border-radius:10px;border:1px solid rgba(139,92,246,.15);background:rgba(139,92,246,.03)">
+<h3 style="margin-bottom:8px">Loop 3: Test, Measure, Learn, Scale, Document</h3>
+<p>Weekly experiment cadence. Google Search on "HotDocs alternative." LinkedIn ABM targeting 10 AmLaw firms. Comparison page launch. What works gets scaled. What does not gets killed. Everything documented so the Growth Marketing Manager inherits a playbook, not a blank page.</p>
+</div>
+</div>
+<p class="tagline reveal" style="margin-top:20px;font-style:italic">This is how Avvoka goes from GBP 5M to GBP 50M. Not by scaling Giles's calendar. By building a system that compounds without him in every meeting.</p>
+</div>
+</section>
+
+<!-- SECTION 21: FAQ -->
+<section id="faq">
+<div class="inner">
+<span class="label reveal">Questions</span>
+<h2 class="reveal">Frequently Asked Questions</h2>
+<div class="faq-list reveal">
+<div class="faq-item"><div class="faq-q">Why is this free?</div><div class="faq-a">Because the package itself is the proof. If this makes you think "this person understands legal tech buyers," that is worth more than any sales call.</div></div>
+<div class="faq-item"><div class="faq-q">Our buyers don't respond to marketing. We've always grown through relationships.</div><div class="faq-a">Correct. Your buyers don't respond to generic B2B marketing. They respond to peer referrals, conference demos, analyst rankings, and thought leadership. That is exactly what this blueprint builds. Not LinkedIn ads to paralegals. ABM to CKOs through channels they actually trust.</div></div>
+<div class="faq-item"><div class="faq-q">We already have a Growth Marketing Manager posting live.</div><div class="faq-a">Perfect. Give them this blueprint on day one. They execute from a system instead of starting with a blank canvas. MDB builds the infrastructure. Your hire runs it.</div></div>
+<div class="faq-item"><div class="faq-q">How is this different from a marketing agency?</div><div class="faq-a">Agencies produce campaigns. MDB installs infrastructure. The attribution system, the experiment framework, the nurture sequences, the ABM playbook. These are permanent assets that compound after we leave.</div></div>
+<div class="faq-item"><div class="faq-q">What if marketing genuinely doesn't work for legal tech?</div><div class="faq-a">Ironclad grew to $150M ARR with significant marketing investment. The question is not whether marketing works for legal tech. The question is which marketing works for YOUR legal tech buyer. This blueprint answers that.</div></div>
+<div class="faq-item"><div class="faq-q">We only raised GBP 14M. Is this a good use of capital?</div><div class="faq-a">The 10 experiments total GBP 17K to 30K. That is 0.2% of your raise. The learning determines how to deploy the remaining 99.8% effectively.</div></div>
+<div class="faq-item"><div class="faq-q">How quickly will we see results?</div><div class="faq-a">First marketing sourced demo requests within 30 days. Optimised channel performance within 60 days. Documented playbook within 90 days.</div></div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 22: ABOUT -->
+<section class="alt" id="about">
+<div class="inner">
+<span class="label reveal">About</span>
+<h2 class="reveal">Jean Mundabi Fala</h2>
+<div class="about-card reveal">
+<div class="avatar">JM</div>
+<div class="about-info">
+<h3>Jean Mundabi Fala</h3>
+<div class="title-role">CEO, MDB Growth Capital</div>
+<p>Based in the UK. Originally from DRC. Fluent in French and English. 3+ years leading SMB performance marketing at BT/EE. 2+ years managing GBP 30 to 40M marketing budgets at Santander. Master's in Business Intelligence and Data Mining.</p>
+<a href="https://linkedin.com/in/jeanmundabi" target="_blank" class="linkedin-btn">Connect on LinkedIn</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 23: OFFER -->
+<section class="dark" id="offer">
+<div class="inner">
+<span class="label reveal">The Offer</span>
+<h2 class="reveal">Everything here is yours to keep.</h2>
+<p class="reveal">Use the experiment framework. Run the HotDocs migration campaign. Brief the analysts. No strings attached.</p>
+<p class="reveal" style="margin-top:20px"><strong>If you want to go further:</strong></p>
+<ul class="reveal" style="margin:12px 0 20px 20px;font-size:.95rem;opacity:.9">
+<li>Full demand gen infrastructure installation (every funnel stage covered)</li>
+<li>Legal buyer channel strategy (conferences, analysts, ABM, referrals)</li>
+<li>US expansion demand gen playbook</li>
+<li>90 day hands on build with your team</li>
+<li>"Drafting infrastructure" category positioning strategy</li>
+</ul>
+<p class="reveal" style="opacity:.7">Investment: Let us discuss it on a call. We will show you the economics first.</p>
+</div>
+</section>
+
+<!-- SECTION 24: FINAL CTA -->
+<section class="dark" id="cta2" style="padding-bottom:40px">
+<div class="inner" style="text-align:center">
+<h2 class="reveal">2 Options To Get Started</h2>
+<div class="cta-grid reveal">
+<div class="cta-card"><h3>Just Reply</h3><p>Reply to the email this came with. Tell me what resonated.</p><a class="btn outline" href="mailto:">Reply to Email</a></div>
+<div class="cta-card"><h3>Book A Call</h3><p>15 minutes. No pitch. No deck. Just Avvoka's demand gen.</p><a class="btn" href="https://cal.com/jean-m-8f4kbr/15min" target="_blank">Book 15 Minutes</a></div>
+</div>
+<p class="closing reveal" style="margin-top:32px">Giles, Avvoka bootstrapped to GBP 5M on product and relationships. The GBP 14M raise changes the game. Let me help you build the demand gen engine that turns that investment into pipeline.</p>
+<p class="reveal" style="font-size:1.1rem;font-weight:700;margin-top:16px">Read it. Then decide.</p>
+<p class="signature reveal">Jean Mundabi Fala<br>MDB Growth Capital</p>
+<div class="footer-bar">Strategy and GTM research by Jean Mundabi Fala</div>
+</div>
+</section>
+
+<!-- CAL.COM EMBED SCRIPT -->
+<script>
+(function(){
+  const s=document.createElement('script');
+  s.src='https://app.cal.com/embed/embed.js';
+  s.async=true;
+  document.head.appendChild(s);
+})();
+</script>
+
+<script>
+// ── SCROLL ANIMATIONS ──
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ── SIDE NAV SCROLL TRACKING ──
+const sections=document.querySelectorAll('section[id]');
+const navDots=document.querySelectorAll('.side-nav a');
+const navObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navDots.forEach(d=>d.classList.remove('active'));
+      const dot=document.querySelector(`.side-nav a[href="#${e.target.id}"]`);
+      if(dot)dot.classList.add('active');
+    }
+  })
+},{threshold:0.3,rootMargin:'-10% 0px -60% 0px'});
+sections.forEach(s=>navObserver.observe(s));
+
+// ── FAQ ACCORDION ──
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement;
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen)item.classList.add('open');
+  });
+});
+
+// ── VIDEO EMBED ──
+const videoEl=document.getElementById('videoEmbed');
+const videoUrl='VIDEO_URL_GOES_HERE';
+if(videoUrl&&videoUrl!=='VIDEO_URL_GOES_HERE'){
+  let embedUrl='';
+  if(videoUrl.includes('loom.com')){
+    const id=videoUrl.split('/').pop().split('?')[0];
+    embedUrl=`https://www.loom.com/embed/${id}`;
+  }else if(videoUrl.includes('youtube.com')||videoUrl.includes('youtu.be')){
+    const id=videoUrl.includes('youtu.be')?videoUrl.split('/').pop():new URLSearchParams(new URL(videoUrl).search).get('v');
+    embedUrl=`https://www.youtube.com/embed/${id}`;
+  }else if(videoUrl.includes('vimeo.com')){
+    const id=videoUrl.split('/').pop().split('?')[0];
+    embedUrl=`https://player.vimeo.com/video/${id}`;
+  }else if(videoUrl.includes('tella.tv')){
+    embedUrl=videoUrl.replace('/video/','/embed/');
+  }
+  if(embedUrl){
+    videoEl.innerHTML=`<iframe src="${embedUrl}" style="width:100%;height:100%;border:none;border-radius:12px" allowfullscreen></iframe>`;
+  }
+}
+</script>
+</body>
+</html>
